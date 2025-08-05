@@ -1,4 +1,4 @@
-# SiC MOSFET with Integrated SBD – Performance Prediction (Research Paper Reproduction)
+# SiC MOSFET-SBD Device Simulation and ML-Based Performance Prediction
 
 ## 📌 Project Overview
 

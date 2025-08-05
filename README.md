@@ -87,41 +87,38 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 
 ### 2️⃣ Graphical Comparisons
 
-#### 🔹 Device Structure
-- **Paper Graph:**  
-![Paper Device Structure](original_paper_results/sbdmosfet.png)
+### 2️⃣ Graphical Comparisons
 
-- **Implemented Simulation Graph:**  
-![Implemented Device Structure](result_visualization/structure_sicsbdmosfet.png)
+#### 🔹 Device Structure
+<div align="center">
+  <img src="original_paper_results/sbdmosfet.png" alt="Paper Device Structure" width="400"/>
+  <img src="result_visualization/structure_sicsbdmosfet.png" alt="Implemented Device Structure" width="400"/>
+</div>
 
 ---
 
 #### 🔹 Output Characteristics
-- **Paper Graph:**  
-![Paper Output Graph](original_paper_results/output_characteristic.png)
-
-- **Implemented Simulation Graph:**  
-![Implemented Output Graph](result_visualization/output_characteristic.png)
+<div align="center">
+  <img src="original_paper_results/output_characteristic.png" alt="Paper Output Graph" width="400"/>
+  <img src="result_visualization/output_characteristic.png" alt="Implemented Output Graph" width="400"/>
+</div>
 
 ---
 
 #### 🔹 Input Characteristics
-- **Paper Graph:**  
-![Paper Input Graph](original_paper_results/input_characteristic.png)
-
-- **Implemented Simulation Graph:**  
-![Implemented Input Graph](result_visualization/transfer_characteristic.png)
+<div align="center">
+  <img src="original_paper_results/input_characteristic.png" alt="Paper Input Graph" width="400"/>
+  <img src="result_visualization/transfer_characteristic.png" alt="Implemented Input Graph" width="400"/>
+</div>
 
 ---
 
 #### 🔹 Breakdown Characteristics
-- **Paper Graph:**  
-![Paper Breakdown Graph](original_paper_results/breakdown_voltage.png)
+<div align="center">
+  <img src="original_paper_results/breakdown_voltage.png" alt="Paper Breakdown Graph" width="400"/>
+  <img src="result_visualization/breakdown_plot.png" alt="Implemented Breakdown Graph" width="400"/>
+</div>
 
-- **Implemented Simulation Graph:**  
-![Implemented Breakdown Graph](result_visualization/breakdown_plot.png)
-
----
 
 ## 🧠 Neural Network Implementation
 

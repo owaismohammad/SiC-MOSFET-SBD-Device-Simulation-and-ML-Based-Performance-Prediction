@@ -92,7 +92,7 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 ![Paper Device Structure](original_paper_results/sbdmosfet.png)
 
 - **Implemented Simulation Graph:**  
-![Implemented Device Structure](rresult_visualization/structure_sicsbdmosfet.png)
+![Implemented Device Structure](result_visualization/structure_sicsbdmosfet.png)
 
 ---
 

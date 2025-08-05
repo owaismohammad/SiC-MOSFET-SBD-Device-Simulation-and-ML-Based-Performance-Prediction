@@ -92,58 +92,14 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 ### 2️⃣ Graphical Comparisons
 
 #### 🔹 Device Structure
-<div align="center">
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="original_paper_results/sbdmosfet.png" alt="Paper Device Structure" width="400"/>
-    <figcaption><b>Paper Device Structure</b></figcaption>
-  </figure>
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="result_visualization/structure_sicsbdmosfet.png" alt="Implemented Device Structure" width="400"/>
-    <figcaption><b>Implemented Device Structure</b></figcaption>
-  </figure>
-</div>
+### 2️⃣ Graphical Comparisons
 
----
-
-#### 🔹 Output Characteristics
-<div align="center">
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="original_paper_results/output_characteristic.png" alt="Paper Output Graph" width="400"/>
-    <figcaption><b>Paper Output Graph</b></figcaption>
-  </figure>
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="result_visualization/output_characteristic.png" alt="Implemented Output Graph" width="400"/>
-    <figcaption><b>Implemented Output Graph</b></figcaption>
-  </figure>
-</div>
-
----
-
-#### 🔹 Input Characteristics
-<div align="center">
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="original_paper_results/input_characteristic.png" alt="Paper Input Graph" width="400"/>
-    <figcaption><b>Paper Input Graph</b></figcaption>
-  </figure>
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="result_visualization/transfer_characteristic.png" alt="Implemented Input Graph" width="400"/>
-    <figcaption><b>Implemented Input Graph</b></figcaption>
-  </figure>
-</div>
-
----
-
-#### 🔹 Breakdown Characteristics
-<div align="center">
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="original_paper_results/breakdown_voltage.png" alt="Paper Breakdown Graph" width="400"/>
-    <figcaption><b>Paper Breakdown Graph</b></figcaption>
-  </figure>
-  <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="result_visualization/breakdown_plot.png" alt="Implemented Breakdown Graph" width="400"/>
-    <figcaption><b>Implemented Breakdown Graph</b></figcaption>
-  </figure>
-</div>
+| **Characteristic**       | **Graph from Paper** | **My Implementation** |
+|--------------------------|----------------------|-----------------------|
+| **Device Structure**      | <img src="original_paper_results/sbdmosfet.png" width="350"/> | <img src="result_visualization/structure_sicsbdmosfet.png" width="350"/> |
+| **Output Characteristic** | <img src="original_paper_results/output_characteristic.png" width="350"/> | <img src="result_visualization/output_characteristic.png" width="350"/> |
+| **Input Characteristic**  | <img src="original_paper_results/input_characteristic.png" width="350"/> | <img src="result_visualization/transfer_characteristic.png" width="350"/> |
+| **Breakdown Voltage**     | <img src="original_paper_results/breakdown_voltage.png" width="350"/> | <img src="result_visualization/breakdown_plot.png" width="350"/> |
 
 
 ## 🧠 Machine Learning Architecture – SiC-SBD MOSFET Performance Prediction

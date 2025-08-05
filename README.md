@@ -1,145 +1,168 @@
-# SiC-MOSFET-SBD-Research-Reproduction
-# Project: Automated Simulation & ML Modeling of MOSFET Devices with Silvaco
+# SiC MOSFET with Integrated SBD – Performance Prediction (Research Paper Reproduction)
+
+## 📌 Project Overview
+
+This repository is my attempt to **reproduce the research paper**:
+
+> **"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"**
+
+The project demonstrates:
+- **Device Simulation** of a SiC MOSFET integrated with a Schottky Barrier Diode (SBD) using Silvaco ATLAS.
+- **Graphical Analysis** of device characteristics (Output, Input, Breakdown).
+- **Generalized Simulation Automation** for 625 parameter variations (P-well doping, P-well depth, JFET width, SBD width).
+- **Neural Network Model** to predict device performance parameters (Specific On-Resistance \(R_{on,sp}\), Threshold Voltage \(V_{th}\), Breakdown Voltage (BV)) from structural parameters.
+
+⚠️ Due to **hardware limitations**, I could not execute all 625 simulations and train the ML model on the full dataset. However:
+- The **entire pipeline is implemented**.
+- The **neural network architecture is ready** and can be trained by anyone with sufficient computational resources.
 
 ---
 
-## Table of Contents
+## 📖 My Journey
 
-- [Project Motivation](#project-motivation)
-- [Journey & Implementation Overview](#journey--implementation-overview)
-- [Features & Capabilities](#features--capabilities)
-- [Silvaco: Drawbacks & Challenges](#silvaco-drawbacks--challenges)
-- [How to Use This Repository](#how-to-use-this-repository)
-- [Results & Comparison](#results--comparison)
-  - [Paper Graphs vs My Results](#paper-graphs-vs-my-results)
-  - [Obtained MOSFET Vth Value](#obtained-mosfet-vth-value)
-- [Machine Learning Pipeline](#machine-learning-pipeline)
-- [Potential & Next Steps](#potential--next-steps)
-- [Gallery: Insert Your Graphs and Paper Graphs](#gallery-insert-your-graphs-and-paper-graphs)
-- [Acknowledgements](#acknowledgements)
+I began this project **at the end of July**, with **zero prior knowledge of Silvaco ATLAS**.  
+Here's how the implementation progressed:
 
----
+1. **Learning Silvaco from Scratch:**  
+   - With no proper tutorials or guides available online, I relied solely on the **1200-page Silvaco manual**.  
+   - Progress was slow and debugging was extremely challenging due to limited online support.
 
-## Project Motivation
+2. **Single Device Simulation:**  
+   - Implemented the given SiC MOSFET with integrated SBD structure as described in the paper.
+   - Extracted **I-V characteristics** and threshold voltage \(V_{th}\).  
+   - The paper reported \(V_{th} = 6.101V\), whereas my simulation resulted in **5.0889V** because:
+     - Some device parameters were not specified in the paper.
+     - Computational limitations forced me to use **less coarse meshing**, affecting accuracy.
 
-I started this project with zero prior knowledge in Silvaco at the end of July, determined to reproduce and extend the results of a referenced research paper. The goal was not just to validate a single device, but to **generalize the simulation process** for a broader set of devices, then apply ML on the complete dataset.
+3. **Graph Generation:**  
+   - Reproduced **Output Characteristics**, **Input Characteristics**, and **Breakdown Characteristics** as shown in the paper.
+   - Scripts were written to automatically plot results from Silvaco simulation outputs.
 
----
+4. **Generalized Simulation:**  
+   - Developed a **parameter sweep automation program** to simulate 625 devices with varying:
+     - P-well doping  
+     - P-well depth  
+     - JFET width  
+     - SBD width  
+   - The code is fully functional but could not be fully executed due to resource constraints (one simulation takes ~40 min on my machine).
 
-## Journey & Implementation Overview
-
-- **July:** Began exploring Silvaco, starting with basic device simulations.
-- **August:** Successfully implemented and validated a single MOSFET as described in the paper.
-- **September:** Progressed to generating all simulation graphs (breakdown, output, input characteristics).
-- **October:** Faced and solved the challenge of scaling the code.
-- **November:** Developed the general framework to automate and run all 625 device simulations—fully parameterized code.
-- **December:** Designed and implemented the entire ML architecture (per the paper’s approach).
-
-**Note:** I could not extract all 625 device results or train the ML model because of computational resource limitations. However, both the simulation codebase and the ML architecture are complete; anyone with access to adequate computational power can directly use this workflow.
+5. **Machine Learning Model:**  
+   - Implemented the **neural network architecture** described in the paper to predict device performance metrics.
+   - Ready to train once the full dataset is generated.
 
 ---
 
-## Features & Capabilities
+## 🚧 Challenges with Silvaco
 
-- **Automated Silvaco Simulation:** Reproducible setup for any MOSFET structure as described in the reference paper.
-- **Device Characteristics:** Output graphs include:
-  - Output characteristics
-  - Input characteristics
-  - Breakdown voltage
-- **Parameter Sweep:** Generalized program structure, scalable to 625 simulation variations.
-- **Machine Learning:** ML pipeline and model architecture ready for training and prediction.
+Working with Silvaco ATLAS was one of the most challenging aspects of this project:
 
----
+- **❌ Lack of Learning Resources:**  
+  No proper tutorials or guides are available online for complex device simulations.  
+  Most learning had to come from the **1200+ page manual**, making the process time-consuming.
 
-## Silvaco: Drawbacks & Challenges
+- **⚠️ Debugging Issues:**  
+  Errors are often cryptic and require multiple trial-and-error attempts to resolve.
 
-- **Lack of Documentation:** Minimal online resources, few tutorials, and a steep learning curve.
-- **Support Materials:** Main reference is a 1,200+ page manual; if you're stuck, it's a slow process to debug or resolve errors.
-- **Community & Forums:** Community support is sparse—solving issues often means exhaustive manual reading.
-- **Resource Intensity:** Simulating hundreds of devices is computationally expensive; mesh coarseness and parameter granularity must be traded off for speed.
-- **Parameter Visibility:** Many necessary device parameters are undefined in papers, requiring experimentation.
+- **⏳ Extremely Slow Simulations:**  
+  Each device structure takes **30–40 minutes to simulate**, making large-scale parameter sweeps difficult on a personal machine.
 
 ---
 
-## How to Use This Repository
-
-1. **Clone the Repo:**  
-   `git clone <your-repo-url> && cd <repo-folder>`
-2. **Install Silvaco:**  
-   Obtain and install Silvaco TCAD software (not included).
-3. **Configure Parameters:**  
-   Adjust device structure, simulation ranges, and mesh settings as needed in the `.in` files and scripts.
-4. **Run Simulations:**  
-   Use the main script to:
-   - Simulate a single device
-   - Run batch simulations for parameter sweeps
-5. **Machine Learning:**  
-   Load the results (once generated) into the provided ML scripts to train and evaluate the predictive model.
 
 ---
 
-## Results & Comparison
+## 📊 Results (Single Device)
 
-### Paper Graphs vs My Results
+- The following section compares the **results from the paper** with **my simulation results** for a single MOSFET.
 
-> _Add images below! Side-by-side comparison will be helpful; use the Markdown image syntax (see examples)._
+### 1️⃣ Threshold Voltage \(V_{th}\)
+- **Paper:** 6.101 V  
+- **My Simulation:** 5.0889 V
 
-| Characteristic | Graph from Paper | My Implementation |
-|--|--|--|
-| Output Characteristic | ![Paper Output](./images/paper_output.png) | ![My Output](./images/my_output.png) |
-| Input Characteristic  | ![Paper Input](./images/paper_input.png)   | ![My Input](./images/my_input.png)   |
-| Breakdown Voltage     | ![Paper Breakdown](./images/paper_breakdown.png) | ![My Breakdown](./images/my_breakdown.png) |
-
-_Feel free to replace filenames above with your actual graphs._
-
-### Obtained MOSFET Vth Value
-
-- **Paper:** \( V_{th} = 6.101 \)
-- **Mine:** \( V_{th} = 5.0889 \)  
-  _This difference is due to undefined parameters in the paper, and because I had to use coarser meshes and less fine spacing due to computational limitations._
+⚠️ **Reason for Deviation:**  
+- Missing some parameter definitions in the paper.  
+- Computational limits forced me to use a **less fine mesh**, impacting accuracy.
 
 ---
 
-## Machine Learning Pipeline
+### 2️⃣ Graphical Comparisons
 
-Although I could not train the ML model on all 625 results due to resource constraints, the ML architecture is ready, following the flow described in the paper. If you wish to use the code for further prediction or analysis:
+#### 🔹 Output Characteristics
+- **Paper Graph:**  
+![Paper Output Graph](path_to_paper_output_graph.png)
 
-1. Input your own X-Y data (from Silvaco outputs).
-2. Run the ML scripts in `/ml/` folder.
-3. Adjust model hyperparameters as necessary.
-
----
-
-## Potential & Next Steps
-
-- **Community Resource:** This framework saves months of ramp-up for new Silvaco users, providing tested templates for both simulation and ML analysis.
-- **Extendable:** The same logic and codebase can be adapted for other device structures or parameter sweeps.
+- **My Simulation Graph:**  
+![My Output Graph](path_to_my_output_graph.png)
 
 ---
 
-## Gallery: Insert Your Graphs and Paper Graphs
+#### 🔹 Input Characteristics
+- **Paper Graph:**  
+![Paper Input Graph](path_to_paper_input_graph.png)
 
-> Paste your obtained results and the corresponding images from the paper in this section for a visual reference.
-
-- _Output Characteristic Graphs_
-  - Paper: ![Insert paper image here]()
-  - Obtained: ![Insert my image here]()
-- _Input Characteristic Graphs_
-  - Paper: ![Insert paper image here]()
-  - Obtained: ![Insert my image here]()
-- _Breakdown Voltage_
-  - Paper: ![Insert paper image here]()
-  - Obtained: ![Insert my image here]()
+- **My Simulation Graph:**  
+![My Input Graph](path_to_my_input_graph.png)
 
 ---
 
-## Acknowledgements
+#### 🔹 Breakdown Characteristics
+- **Paper Graph:**  
+![Paper Breakdown Graph](path_to_paper_breakdown_graph.png)
 
-- Thanks to the authors of the reference paper for their detailed methodology.
-- Silvaco documentation team (for the rare, clear sections in the 1,200-page manual).
-- Early contributors and testers who improved the codebase and scripts.
+- **My Simulation Graph:**  
+![My Breakdown Graph](path_to_my_breakdown_graph.png)
 
 ---
 
-## If you use, fork, or build upon this repository, please consider citing or referencing this README!
+## 🧠 Neural Network Implementation
+
+- Predicts:
+  - Specific ON-resistance \(R_{on,sp}\)
+  - Threshold voltage \(V_{th}\)
+  - Breakdown voltage (BV)
+- Input Parameters:
+  - P-well doping
+  - P-well depth
+  - JFET width
+  - SBD width
+
+> The **model architecture** is implemented but not trained on the full dataset due to limited compute power.  
+> Anyone with access to a high-performance machine and a Silvaco license can use this code to **generate the dataset and train the model**.
+
+---
+
+## 🚀 How This Repo Can Help You
+
+- Provides **ready-to-use Silvaco scripts** for simulating a SiC MOSFET-SBD device.
+- Shows how to **automate large-scale simulations** for parametric analysis.
+- Offers a **template for building ML-based prediction models** for semiconductor devices.
+- A good **starting point for beginners in Silvaco** to learn:
+  - How to structure a device simulation project.
+  - How to extract and visualize results.
+  - How to integrate ML with TCAD simulations.
+
+---
+
+## 🛠️ Future Work
+
+- Run all **625 simulations** on a high-performance machine.
+- Train and validate the **neural network model** with the full dataset.
+- Improve mesh refinement for higher accuracy results.
+- Extend the pipeline to other **SiC-based power devices**.
+
+---
+
+## 📜 References
+
+- **Original Paper:**  
+*"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"*  
+(Include DOI or link if available)
+
+---
+
+> **Disclaimer:** This repository is for educational and research purposes only.  
+> It assumes you have access to a **licensed version of Silvaco ATLAS/DeckBuild**.
+
+---
+
 

@@ -87,30 +87,39 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 
 ### 2️⃣ Graphical Comparisons
 
+#### 🔹 Device Structure
+- **Paper Graph:**  
+![Paper Device Structure](original_paper_results/sbdmosfet.png)
+
+- **Implemented Simulation Graph:**  
+![Implemented Device Structure](rresult_visualization/structure_sicsbdmosfet.png)
+
+---
+
 #### 🔹 Output Characteristics
 - **Paper Graph:**  
-![Paper Output Graph](path_to_paper_output_graph.png)
+![Paper Output Graph](original_paper_results/output_characteristic.png)
 
-- **My Simulation Graph:**  
-![My Output Graph](path_to_my_output_graph.png)
+- **Implemented Simulation Graph:**  
+![Implemented Output Graph](result_visualization/output_characteristic.png)
 
 ---
 
 #### 🔹 Input Characteristics
 - **Paper Graph:**  
-![Paper Input Graph](path_to_paper_input_graph.png)
+![Paper Input Graph](original_paper_results/input_characteristic.png)
 
-- **My Simulation Graph:**  
-![My Input Graph](path_to_my_input_graph.png)
+- **Implemented Simulation Graph:**  
+![Implemented Input Graph](result_visualization/transfer_characteristic.png)
 
 ---
 
 #### 🔹 Breakdown Characteristics
 - **Paper Graph:**  
-![Paper Breakdown Graph](path_to_paper_breakdown_graph.png)
+![Paper Breakdown Graph](original_paper_results/breakdown_voltage.png)
 
-- **My Simulation Graph:**  
-![My Breakdown Graph](path_to_my_breakdown_graph.png)
+- **Implemented Simulation Graph:**  
+![Implemented Breakdown Graph](result_visualization/breakdown_plot.png)
 
 ---
 
@@ -156,7 +165,7 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 
 - **Original Paper:**  
 *"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"*  
-(Include DOI or link if available)
+([Link to the original paper](https://www.mdpi.com/2072-666X/16/1/55))
 
 ---
 

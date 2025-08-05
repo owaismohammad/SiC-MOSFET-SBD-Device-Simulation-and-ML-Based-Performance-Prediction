@@ -1,0 +1,128 @@
+go atlas
+
+mesh width=1e3
+
+# X-Direction Mesh
+x.mesh loc=0.0 spac=0.4
+x.mesh loc=1.0 spac=0.1
+x.mesh loc=2.0 spac=0.1
+x.mesh loc=3.0 spac=0.1
+x.mesh loc=4.5 spac=0.1
+x.mesh loc=5.5 spac=0.4
+
+# Y-Direction Mesh
+y.mesh loc=0.00 spac=0.01
+y.mesh loc=0.05 spac=0.01
+y.mesh loc=0.10 spac=0.01
+y.mesh loc=0.30 spac=0.4
+y.mesh loc=0.80 spac=0.4
+y.mesh loc=10.1 spac=0.4
+y.mesh loc=10.3 spac=0.01
+y.mesh loc=10.35 spac=0.01
+
+
+#
+region number=1 x.min=0 x.max=2.6 y.min=0.05 y.max=0.10 material=SiO2
+region number=2 x.min=0 x.max=5.5 y.min=0.1 y.max=10.1 material=4H-SiC
+region number=3 x.min=1 x.max=3 y.min=0.1 y.max=0.8 material=4H-SiC
+region number=4 x.min=2 x.max=3 y.min=0.1 y.max=0.3 material=4H-SiC
+region number=5 x.min=3 x.max=4.5 y.min=0.1 y.max=0.8 material=4H-SiC
+region number=6 x.min=0 x.max=5.5 y.min=10.1 y.max=10.3 material=4H-SiC
+
+#
+electrode name=gate x.min=0 x.max=2.2 y.min=0.06 y.max=0.09
+electrode name=drain x.min=0 x.max=5.55 y.min=10.3 y.max=10.35
+electrode name=source x.min=0 x.max=2.6 y.min=0.0 y.max=0.05
+electrode name=source x.min=2.6 x.max=5.5 y.min=0.0 y.max=0.1
+electrode name=schottky_contact x.min=4.5 x.max=5.5 y.min=0.1 y.max=0.1
+
+#
+doping uniform concentration=1e18 p.type region=3
+doping uniform concentration=2e18 p.type region=5
+doping uniform concentration=2e19 n.type region=4
+doping uniform concentration=6e15 n.type region=2
+doping uniform concentration=1e19 n.type region=6
+
+#
+interf qf=3e10
+
+contact name=gate workfun=5.23
+contact name=drain
+contact name=source
+contact name=schottky_contact workfun=4.6
+
+#
+models cvt srh fldmob bgn auger incomplete print
+impact selb an1=1.66E+06 bn1=1.27E+07 ap1=1.66E+06 bp1=1.27E+07 egran=-1 betan=1 betap=1
+
+#method newton trap
+
+#
+#solve init 
+#solve prev
+#
+## Id-Vg Curve
+#solve    vdrain=0.001
+#solve    vdrain=0.01
+#solve    vdrain=0.1 
+#solve    vdrain=1.0 vstep=0.2 vfinal=10.0 name=drain
+#log outf=idvgSiCMOSFET.log 
+#solve    vgate=0.0 vstep=0.2 vfinal=10.0 name=gate
+#log off
+#
+#tonyplot idvgSiCMOSFET.log
+#
+## Id-Vd Curve
+#solve vdrain=0.001
+#solve vdrain=0.01
+#solve vdrain=0.1
+#
+#
+#solve vgate = 4.0 outf = solve_tmp0
+#solve vgate=6.0 outf=solve_tmp1
+#solve vgate=9.0 outf=solve_tmp2
+#solve vgate=12.0 outf=solve_tmp3
+#solve vgate=15.0 outf=solve_tmp4
+#
+#
+#load infile= solve_tmp0
+#log outf = idvd_vg4.log
+#solve vdrain= 0.0 vfinal =10.0 vstep = 0.2 name=drain
+#log off
+#
+#
+#load infile=solve_tmp1
+#log outf=idvd_vg6.log
+#solve vdrain=0.0 vstep=0.2 vfinal=10.0 name=drain
+#log off
+#
+#load infile=solve_tmp2
+#log outf=idvd_vg9.log
+#solve vdrain=0.0 vstep=0.2 vfinal=10.0 name=drain
+#log off
+#
+#load infile=solve_tmp3
+#log outf=idvd_vg12.log
+#solve vdrain=0.0 vstep=0.2 vfinal=10.0 name=drain
+#log off
+#
+#load infile=solve_tmp4
+#log outf=idvd_vg15.log
+#solve vdrain=0.0 vstep=0.2 vfinal=10.0 name=drain
+#log off
+#
+#tonyplot -overlay idvd_vg4.log idvd_vg6.log idvd_vg9.log idvd_vg12.log idvd_vg15.log 
+
+#Breakdown Voltage
+#solve vgate=4.0 name=gate
+#log outf=breakdown.log
+#solve vdrain=0 vstep=2 vfinal=1600 name =drain
+#log off
+#
+#tonyplot breakdown.log
+#save outf=sicSBDMOSFET.str
+set x=1
+extract init inf="idvgSiCMOSFET.log"
+extract name="Vth${x}" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))))
+
+quit

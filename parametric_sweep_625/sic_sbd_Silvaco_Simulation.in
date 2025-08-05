@@ -1,0 +1,134 @@
+go atlas
+
+loop steps= 5 
+  assign name=pwdop print n.value=1e18 delta=1e18
+  assign name=counterpwdop n.value=1 delta=1
+  loop steps= 5
+	assign name=pwdepth print n.value=0.5 delta=0.1
+	assign name=counterpwdepth n.value=1 delta=1
+    loop steps = 5
+	assign name=wjfet print n.value=1 delta=0.1
+	assign name=counterwjfet n.value=1 delta=1
+      loop steps = 5
+	assign name=wsbd print n.value=1 delta=0.1
+	assign name=counterwsbd n.value=1 delta=1
+
+	
+        #----------------------------------
+        # Mesh parameters
+        #----------------------------------
+        set start_x=0.0
+        set x_wjfet=$start_x+${wjfet}
+        set x_pwell_start=$x_wjfet+1
+        set x_nplus=$x_pwell_start+1
+        set x_p_plus=$x_nplus+1.5
+        set x_wsbd=$x_p_plus+${wsbd}
+
+        set start_y=0.0
+        set y_anode=$start_y+0.05
+        set y_oxide=$y_anode+0.05
+        set y_nplus=$y_oxide+0.2
+        set y_pwell=$y_oxide+${pwdepth}
+        set y_pplus=$y_oxide+0.7
+        set y_ndrift=$y_oxide+10
+        set y_substrate=$y_ndrift+0.2
+        set y_drain=$y_substrate+0.05
+
+        set x_oxide=$x_nplus-0.4
+        set x_gate=$x_oxide-0.4
+        set y_gate_start=$y_anode+0.01
+        set y_gate_end=$y_oxide-0.01
+
+        #----------------------------------
+        # Begin Device Definition
+        #----------------------------------
+        mesh width=1e3
+
+        x.mesh loc=$start_x spac=0.4
+        x.mesh loc=$x_wjfet spac=0.1
+        x.mesh loc=$x_pwell_start spac=0.1
+        x.mesh loc=$x_nplus spac=0.1
+        x.mesh loc=$x_p_plus spac=0.1
+        x.mesh loc=$x_wsbd spac=0.1
+
+        y.mesh loc=$start_y spac=0.01
+        y.mesh loc=$y_anode spac=0.01
+        y.mesh loc=$y_oxide spac=0.01
+        y.mesh loc=$y_nplus spac=0.1
+        y.mesh loc=$y_pplus spac=0.1
+        y.mesh loc=$y_ndrift spac=0.4
+        y.mesh loc=$y_substrate spac=0.01
+        y.mesh loc=$y_drain spac=0.01
+
+        region number=1 name=oxide x.min=$start_x x.max=$x_oxide y.min=$y_anode y.max=$y_oxide material=SiO2
+        region number=2 name=n-drift x.min=$start_x x.max=$x_wsbd y.min=$y_oxide y.max=$y_ndrift material=4H-SiC
+        region number=3 name=p-well x.min=$x_wjfet x.max=$x_nplus y.min=$y_oxide y.max=$y_pwell material=4H-SiC
+        region number=4 name=n-plus x.min=$x_pwell_start x.max=$x_nplus y.min=$y_oxide y.max=$y_nplus material=4H-SiC
+        region number=5 name=p-plus x.min=$x_nplus x.max=$x_p_plus y.min=$y_oxide y.max=$y_pplus material=4H-SiC
+        region number=6 name=substrate x.min=$start_x x.max=$x_wsbd y.min=$y_ndrift y.max=$y_substrate material=4H-SiC
+
+        electrode name=gate x.min=$start_x x.max=$x_gate y.min=$y_gate_start y.max=$y_gate_end
+        electrode name=drain x.min=$start_x x.max=$x_wsbd y.min=$y_substrate y.max=$y_drain
+        electrode name=source x.min=$start_x x.max=$x_oxide y.min=$start_y y.max=$y_anode
+        electrode name=source x.min=$x_oxide x.max=$x_wsbd y.min=$start_y y.max=$y_oxide
+        electrode name=schottky_contact x.min=$x_p_plus x.max=$x_wsbd y.min=0.1 y.max=0.1
+
+        doping uniform concentration=${pwdop} p.type region=3
+        doping uniform concentration=2e18 p.type region=5
+        doping uniform concentration=2e19 n.type region=4
+        doping uniform concentration=6e15 n.type region=2
+        doping uniform concentration=1e19 n.type region=6
+
+        interf qf=3e10
+
+        contact name=gate workfun=5.23
+        contact name=drain
+        contact name=source
+        contact name=schottky_contact workfun=4.6
+
+        models cvt srh fldmob bgn auger incomplete print
+        impact selb an1=1.66E+06 bn1=1.27E+07 ap1=1.66E+06 bp1=1.27E+07 egran=-1 betan=1 betap=1
+
+        method newton trap
+
+        solve init
+        solve prev
+
+	solve vdrain=0.001
+	solve vdrain=0.01
+	solve vdrain=0.1
+	
+	solve    vdrain=1.0 vstep=0.2 vfinal=10.0 name=drain
+	
+	# Id-Vg Curve
+	log outf="C:/Users/Owais/parametric_sweep_625/idvg_log/idvg_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}.log"
+	solve    vgate=0.0 vstep=0.2 vfinal=10.0 name=gate
+	log off
+	
+	# Id-Vd 
+	solve vgate=10.0 vstep=1 vfinal=15.0 name = gate
+	log outf="C:/Users/Owais/parametric_sweep_625/idvd_log/idvd_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}.log"
+	solve vdrain=0.0 vstep=1 vfinal=10.0 name = drain
+	log off
+	
+	# Vth extract
+	extract init inf="C:/Users/Owais/parametric_sweep_625/idvg_log/idvg_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}.log"
+	extract name="Vth_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))))
+	
+	# BreakDown Voltage
+	set vth = $Vth_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}
+	solve vgate=0.0 vstep=2 vfinal=$vth name=gate
+
+	log outf="C:/Users/Owais/parametric_sweep_625/breakdown_log/breakdown_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}.log.log
+	solve vdrain=0 vstep=2 vfinal=1600 name =drain
+	log off
+
+        # Save structure with unique name for this combination
+        save outf="C:/Users/Owais/parametric_sweep_625/structures/sic-SBDMOSFET_${counterpwdop}${counterpwdepth}${counterwjfet}${counterwsbd}.str"
+	
+      l.end
+    l.end
+  l.end
+l.end
+
+quit

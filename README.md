@@ -18,7 +18,7 @@ The project demonstrates:
 
 ---
 
-## 📖 My Journey
+## 📖 Journey
 
 I began this project **at the end of July**, with **zero prior knowledge of Silvaco ATLAS**.  
 Here's how the implementation progressed:
@@ -112,7 +112,6 @@ The model is designed to predict the following electrical characteristics of the
 - Specific ON-Resistance (\( R_{on,sp} \))
 - Threshold Voltage (\( V_{th} \))
 - Breakdown Voltage (BV)
-- (Optionally) Another device characteristic depending on dataset availability
 
 ---
 

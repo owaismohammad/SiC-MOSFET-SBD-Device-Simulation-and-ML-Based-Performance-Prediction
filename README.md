@@ -146,17 +146,75 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 </div>
 
 
-## 🧠 Neural Network Implementation
+## 🧠 Machine Learning Architecture – SiC-SBD MOSFET Performance Prediction
 
-- Predicts:
-  - Specific ON-resistance \(R_{on,sp}\)
-  - Threshold voltage \(V_{th}\)
-  - Breakdown voltage (BV)
-- Input Parameters:
-  - P-well doping
-  - P-well depth
-  - JFET width
-  - SBD width
+This module implements the **neural network architecture** inspired by the research paper:
+
+> **"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"**
+
+The model is designed to predict the following electrical characteristics of the SiC MOSFET-SBD device:
+- Specific ON-Resistance (\( R_{on,sp} \))
+- Threshold Voltage (\( V_{th} \))
+- Breakdown Voltage (BV)
+- (Optionally) Another device characteristic depending on dataset availability
+
+---
+
+## ⚙️ Architecture Overview
+
+The implemented network goes **beyond a simple MLP**, integrating **fully connected layers, a transposed CNN, and a dual-branch convolutional block** to extract complex feature interactions between structural parameters and resulting device performance.
+
+### **🔹 Input Features**
+The model takes **4 structural parameters** as input:
+1. P-well doping  
+2. P-well depth  
+3. JFET width  
+4. SBD width  
+
+---
+
+### **🔹 Model Layers**
+
+1️⃣ **Fully Connected (Feature Expansion)**  
+- Expands the 4 input parameters into a high-dimensional representation.  
+- Layers:
+   - Linear(4 → 64) → BN → ReLU  
+   - Linear(64 → 128) → BN → ReLU  
+   - Linear(128 → 320) → BN → ReLU  
+- Output reshaped to (64 channels × 5 timesteps) for CNN processing.
+
+---
+
+2️⃣ **Transposed Convolution**  
+- Upsamples the dense features into a structured format for convolutional processing.  
+- Layer:
+   - ConvTranspose1d(64 → 32) → BN → ReLU
+
+---
+
+3️⃣ **Dual-Branch Convolution Block (Feature Extraction)**  
+- Uses a **custom `DualConv` module** (imported from `dualbranchconvolution.py`) that:
+  - Applies **parallel convolution branches** to capture multi-scale feature dependencies.
+  - Merges feature maps for richer representations.
+- Three consecutive `DualConv` blocks progressively extract patterns, resulting in 256 feature channels.
+
+---
+
+4️⃣ **Standard Convolution Layers (Refinement)**  
+- Further processes the extracted features:
+  - Conv1d(256 → 128) → BN → ReLU  
+  - Conv1d(128 → 64) → BN → ReLU  
+  - Conv1d(64 → 32) → BN → ReLU  
+
+---
+
+5️⃣ **Fully Connected Output Layer (Regression)**  
+- Flattens the features and predicts four numerical outputs:
+   - Linear(32×5 → 64) → BN → ReLU  
+   - Linear(64 → 32) → BN → ReLU  
+   - Linear(32 → 4) → Final predictions  
+
+---
 
 > The **model architecture** is implemented but not trained on the full dataset due to limited compute power.  
 > Anyone with access to a high-performance machine and a Silvaco license can use this code to **generate the dataset and train the model**.

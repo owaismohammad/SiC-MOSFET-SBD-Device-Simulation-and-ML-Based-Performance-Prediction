@@ -108,7 +108,7 @@ The model predicts:
 - Breakdown Voltage (BV)
 
 ### **Pipeline to Use the ML Model**
-1. Run `625_prediction.py` to generate 625 simulation input files with varying parameters:
+1. Run `parametric_sweep_625/sic_sbd_Silvaco_Simulation.in` to generate 625 simulation input files with varying parameters:
    - Inputs: **Wjfet**, **Wsbd**, **P-well doping**, **P-well depth**  
 2. Run the **Silvaco batch simulation code** to obtain `.csv` files with extracted parameters:
    - Outputs: **Specific ON-Resistance**, **Breakdown Voltage**, **Threshold Voltage**  

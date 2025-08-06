@@ -2,7 +2,7 @@
 
 ## 📌 Project Overview
 
-This repository is my attempt to **reproduce the research paper**:
+This repository is my attempt to **implement the research paper**:
 
 > **"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"**
 
@@ -14,7 +14,8 @@ The project demonstrates:
 
 ⚠️ Due to **hardware limitations**, I could not execute all 625 simulations and train the ML model on the full dataset. However:
 - The **entire pipeline is implemented**.
-- The **neural network architecture is ready** and can be trained by anyone with sufficient computational resources.
+- The **machine learning architecture is fully written and functional**, ready to train on a dummy dataset or real data if generated.
+- Anyone can **reuse this repository to run the full pipeline** on a high-performance machine.
 
 ---
 
@@ -47,8 +48,10 @@ Here's how the implementation progressed:
    - The code is fully functional but could not be fully executed due to resource constraints (one simulation takes ~40 min on my machine).
 
 5. **Machine Learning Model:**  
-   - Implemented the **neural network architecture** described in the paper to predict device performance metrics.
-   - Ready to train once the full dataset is generated.
+   - Implemented the **neural network architecture** exactly as proposed in the paper, with an enhanced feature extraction pipeline.
+   - The model is fully written and can be trained on:
+     - A **dummy dataset** (provided for testing the pipeline).
+     - The **real dataset** once the 625 simulations are completed.
 
 ---
 
@@ -68,12 +71,9 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 
 ---
 
-
----
-
 ## 📊 Results (Single Device)
 
-- The following section compares the **results from the paper** with **my simulation results** for a single MOSFET.
+The following section compares the **results from the paper** with **my simulation results** for a single MOSFET.
 
 ### 1️⃣ Threshold Voltage \(V_{th}\)
 - **Paper:** 6.101 V  
@@ -87,13 +87,6 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 
 ### 2️⃣ Graphical Comparisons
 
-### 2️⃣ Graphical Comparisons
-
-### 2️⃣ Graphical Comparisons
-
-#### 🔹 Device Structure
-### 2️⃣ Graphical Comparisons
-
 | **Characteristic**       | **Graph from Paper** | **My Implementation** |
 |--------------------------|----------------------|-----------------------|
 | **Device Structure**      | <img src="original_paper_results/sbdmosfet.png" width="350"/> | <img src="result_visualization/structure_sicsbdmosfet.png" width="350"/> |
@@ -101,6 +94,7 @@ Working with Silvaco ATLAS was one of the most challenging aspects of this proje
 | **Input Characteristic**  | <img src="original_paper_results/input_characteristic.png" width="350"/> | <img src="result_visualization/transfer_characteristic.png" width="350"/> |
 | **Breakdown Voltage**     | <img src="original_paper_results/breakdown_voltage.png" width="350"/> | <img src="result_visualization/breakdown_plot.png" width="350"/> |
 
+---
 
 ## 🧠 Machine Learning Architecture – SiC-SBD MOSFET Performance Prediction
 
@@ -108,71 +102,25 @@ This module implements the **neural network architecture** inspired by the resea
 
 > **"SiC MOSFET with Integrated SBD Device Performance Prediction Method Based on Neural Network"**
 
-The model is designed to predict the following electrical characteristics of the SiC MOSFET-SBD device:
+The model predicts:
 - Specific ON-Resistance (\( R_{on,sp} \))
 - Threshold Voltage (\( V_{th} \))
 - Breakdown Voltage (BV)
 
----
-
-## ⚙️ Architecture Overview
-
-The implemented network goes **beyond a simple MLP**, integrating **fully connected layers, a transposed CNN, and a dual-branch convolutional block** to extract complex feature interactions between structural parameters and resulting device performance.
-
-### **🔹 Input Features**
-The model takes **4 structural parameters** as input:
-1. P-well doping  
-2. P-well depth  
-3. JFET width  
-4. SBD width  
+### **Pipeline to Use the ML Model**
+1. Run `625_prediction.py` to generate 625 simulation input files with varying parameters:
+   - Inputs: **Wjfet**, **Wsbd**, **P-well doping**, **P-well depth**  
+2. Run the **Silvaco batch simulation code** to obtain `.csv` files with extracted parameters:
+   - Outputs: **Specific ON-Resistance**, **Breakdown Voltage**, **Threshold Voltage**  
+3. Run `engine.py`:
+   - Trains the ML model on the dataset.
+   - Prints **accuracy metrics**.
+   - Saves the trained model for future predictions.
 
 ---
 
-### **🔹 Model Layers**
-
-1️⃣ **Fully Connected (Feature Expansion)**  
-- Expands the 4 input parameters into a high-dimensional representation.  
-- Layers:
-   - Linear(4 → 64) → BN → ReLU  
-   - Linear(64 → 128) → BN → ReLU  
-   - Linear(128 → 320) → BN → ReLU  
-- Output reshaped to (64 channels × 5 timesteps) for CNN processing.
-
----
-
-2️⃣ **Transposed Convolution**  
-- Upsamples the dense features into a structured format for convolutional processing.  
-- Layer:
-   - ConvTranspose1d(64 → 32) → BN → ReLU
-
----
-
-3️⃣ **Dual-Branch Convolution Block (Feature Extraction)**  
-- Uses a **custom `DualConv` module** (imported from `dualbranchconvolution.py`) that:
-  - Applies **parallel convolution branches** to capture multi-scale feature dependencies.
-  - Merges feature maps for richer representations.
-- Three consecutive `DualConv` blocks progressively extract patterns, resulting in 256 feature channels.
-
----
-
-4️⃣ **Standard Convolution Layers (Refinement)**  
-- Further processes the extracted features:
-  - Conv1d(256 → 128) → BN → ReLU  
-  - Conv1d(128 → 64) → BN → ReLU  
-  - Conv1d(64 → 32) → BN → ReLU  
-
----
-
-5️⃣ **Fully Connected Output Layer (Regression)**  
-- Flattens the features and predicts four numerical outputs:
-   - Linear(32×5 → 64) → BN → ReLU  
-   - Linear(64 → 32) → BN → ReLU  
-   - Linear(32 → 4) → Final predictions  
-
----
-
-> The **model architecture** is implemented but not trained on the full dataset due to limited compute power.  
-> Anyone with access to a high-performance machine and a Silvaco license can use this code to **generate the dataset and train the model**.
+> The ML model has been fully implemented and tested on a dummy dataset.  
+> Anyone with compute resources can run the full pipeline end-to-end using real simulation data.
 
 ---
 
@@ -209,5 +157,3 @@ The model takes **4 structural parameters** as input:
 > It assumes you have access to a **licensed version of Silvaco ATLAS/DeckBuild**.
 
 ---
-
-
